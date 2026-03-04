@@ -107,8 +107,7 @@
   <div class="steps">
     <div class="step-dot active"><div class="dot">1</div><div class="step-lbl">Order</div></div>
     <div class="step-dot"><div class="dot">2</div><div class="step-lbl">Schedule</div></div>
-    <div class="step-dot"><div class="dot">3</div><div class="step-lbl">Email</div></div>
-    <div class="step-dot"><div class="dot">4</div><div class="step-lbl">Review</div></div>
+    <div class="step-dot"><div class="dot">3</div><div class="step-lbl">Review</div></div>
   </div>
 
   <!-- S1: ORDER BUILDER (multi-entree) -->
@@ -128,8 +127,12 @@
 
   <!-- S2: SCHEDULE -->
   <div class="section" id="s1">
-    <div class="sec-title">⏳ Schedule & Location</div>
-    <div class="sec-hint">Pick your pickup time and confirm your Chipotle location.</div>
+    <div class="sec-title">⏳ Schedule & Details</div>
+    <div class="sec-hint">Just a few quick details before we finalize your order.</div>
+
+    <div class="sub-lbl">Your Name</div>
+    <input type="text" id="nameInput" class="field-input" placeholder="e.g. Alex, Rocky, Pharaoh..." oninput="O.name=this.value.trim()">
+    <div class="note-box" style="margin-bottom:20px;">This is the name your order will be placed under — it can be anything you'd like.</div>
 
     <div class="sub-lbl">Chipotle Location</div>
     <input type="text" id="locInput" class="field-input" placeholder="e.g. 300 W 45th St, New York, NY 10036" oninput="O.location=this.value.trim()" style="margin-bottom:4px;">
@@ -165,41 +168,24 @@
         </div>
       </div>
     </div>
+    <div id="e1name" class="err">👑 Enter your name for the order!</div>
     <div id="e1loc" class="err">👑 Enter your Chipotle's address to continue!</div>
     <div id="e1sched" class="err">👑 Please select a pickup time!</div>
     <div class="nav-row">
       <button class="btn btn-s" onclick="prv(1)">← Back</button>
-      <button class="btn btn-p" onclick="nxt(1)">Next: Email →</button>
+      <button class="btn btn-p" onclick="nxt(1)">Review My Order →</button>
     </div>
   </div>
 
-  <!-- S3: EMAIL / NAME -->
+  <!-- S3: REVIEW -->
   <div class="section" id="s2">
-    <div class="sec-title">📧 Chipotle Email</div>
-    <div class="sub-lbl">Name on Order</div>
-    <input type="text" id="nameInput" class="field-input" placeholder="e.g. Alex, Rocky, Pharaoh..." oninput="O.name=this.value.trim()">
-    <div class="note-box">This is the name your order will be placed under — it can be anything you'd like.</div>
-    <div class="sub-lbl">Your Chipotle Email</div>
-    <input type="email" id="emailInput" class="field-input" placeholder="you@example.com" oninput="O.email=this.value.trim()">
-    <div class="note-box">Your email is used solely to place your order and send your confirmation — <strong>we never store or retain it.</strong> This must be linked to an existing Chipotle account. Not comfortable using your main email? You're welcome to <strong>create a separate free Chipotle account</strong> at chipotle.com.</div>
-    <div id="e2name" class="err">👑 Enter a name for your order!</div>
-    <div id="e2email" class="err">👑 Enter the email linked to your Chipotle account!</div>
-    <div id="e2fmt" class="err">👑 That doesn't look like a valid email address.</div>
-    <div class="nav-row">
-      <button class="btn btn-s" onclick="prv(2)">← Back</button>
-      <button class="btn btn-p" onclick="nxt(2)">Review My Order →</button>
-    </div>
-  </div>
-
-  <!-- S4: REVIEW -->
-  <div class="section" id="s3">
     <div class="sec-title">📜 Your Royal Scroll</div>
     <div class="sec-hint">Verify your order, then copy and paste it into the Discord channel.</div>
     <div class="sum-box" id="sumBox"></div>
     <div class="sub-lbl">Copy to Discord — paste into your ticket to finalize your order</div>
     <div class="out-box"><button class="copy-btn" id="cpyBtn" onclick="cpyOrder()">Copy</button><span id="outTxt"></span></div>
     <div class="nav-row">
-      <button class="btn btn-s" onclick="prv(3)">← Edit Order</button>
+      <button class="btn btn-s" onclick="prv(2)">← Edit Order</button>
       <button class="btn btn-p" onclick="resetAll()">🌯 New Order</button>
     </div>
   </div>
@@ -216,7 +202,7 @@ const EXTRAS=[{val:'Fajita Veggies',lbl:'Fajita Veggies'},{val:'Cheese',lbl:'Che
 
 // ── State ──────────────────────────────────────────────────
 // items = array of { entree, prot[], protQ{}, rice, riceQ, beans, beansQ, tops[], topQ{} }
-const O={items:[],round:null,pickup:'',name:'',email:'',location:''};
+const O={items:[],round:null,pickup:'',name:'',location:''};
 let itemIdSeq=0;
 
 // ── Navigation ─────────────────────────────────────────────
@@ -233,13 +219,9 @@ function nxt(f){
     if(bad){showE('e0prot');return;}
   }
   if(f===1){
+    if(!O.name){showE('e1name');return;}
     if(!O.location){showE('e1loc');return;}
     if(!O.pickup){showE('e1sched');return;}
-  }
-  if(f===2){
-    if(!O.name){showE('e2name');return;}
-    if(!O.email){showE('e2email');return;}
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(O.email)){showE('e2fmt');return;}
     buildSum();
   }
   showStep(f+1);
@@ -466,7 +448,6 @@ function buildSum(){
   sumHTML+=`<div class="sum-row"><span class="k">Pickup Time</span><span class="v">${O.pickup}</span></div>`;
   sumHTML+=`<div class="sum-row"><span class="k">Location</span><span class="v">${O.location}</span></div>`;
   sumHTML+=`<div class="sum-row"><span class="k">Name</span><span class="v">${O.name}</span></div>`;
-  sumHTML+=`<div class="sum-row"><span class="k">Chipotle Email</span><span class="v">${O.email}</span></div>`;
   document.getElementById('sumBox').innerHTML=sumHTML;
 
   // Discord output — one block per item in bot format
@@ -488,7 +469,6 @@ function buildSum(){
   lines.push('');
   lines.push(`Pickup: ${O.pickup}`);
   lines.push(`Location: ${O.location}`);
-  lines.push(`Email: ${O.email}`);
   document.getElementById('outTxt').textContent=lines.join('\n');
 }
 function cpyOrder(){
@@ -498,11 +478,9 @@ function cpyOrder(){
   });
 }
 function resetAll(){
-  O.items=[];O.round=null;O.pickup='';O.name='';O.email='';O.location='';
-  itemIdSeq=0;
-  document.getElementById('locInput').value='';
+  O.items=[];O.round=null;O.pickup='';O.name='';O.location='';itemIdSeq=0;
   document.getElementById('nameInput').value='';
-  document.getElementById('emailInput').value='';
+  document.getElementById('locInput').value='';
   document.getElementById('pickSel').value='';
   document.getElementById('roundCallout').style.display='none';
   document.getElementById('tzSel').value='EST';
