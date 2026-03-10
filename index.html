@@ -6,7 +6,7 @@
 <title>Pharaoh's Cheap Chipotle</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{--gold:#f0c040;--gold-dark:#c8960a;--gold-glow:rgba(240,192,64,0.35);--blue:#1a3a8f;--blue-mid:#2856c8;--bg:#0e0a00;--surface:#1a1200;--surface2:#221900;--border:#3a2800;--text:#fdf3d0;--muted:#a8944a;--sand:#f5dfa0;--green:#4ade80;}
+  :root{--gold:#f0c040;--gold-dark:#c8960a;--gold-glow:rgba(240,192,64,0.35);--bg:#0e0a00;--surface:#1a1200;--surface2:#221900;--border:#3a2800;--text:#fdf3d0;--muted:#a8944a;--sand:#f5dfa0;--green:#4ade80;}
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;background-image:radial-gradient(ellipse 100% 50% at 50% 0%,rgba(240,192,64,0.1) 0%,transparent 60%),url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23f0c040' fill-opacity='0.03'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30Z'/%3E%3C/g%3E%3C/svg%3E");}
   header{text-align:center;padding:28px 24px 16px;}
@@ -29,28 +29,28 @@
   @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
   .sec-title{font-family:'Cinzel',serif;font-size:22px;font-weight:700;color:var(--gold);margin-bottom:4px;}
   .sec-hint{font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.5;}
-  /* entree cards */
   .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;margin-bottom:14px;}
-  .card{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:16px 10px;cursor:pointer;transition:all 0.2s;text-align:center;position:relative;}
+  .card{background:var(--surface);border:2px solid var(--border);border-radius:14px;padding:16px 10px;cursor:pointer;transition:all 0.2s;text-align:center;}
   .card:hover{border-color:var(--gold-dark);transform:translateY(-2px);}
   .card.selected{border-color:var(--gold);background:rgba(240,192,64,0.1);box-shadow:0 0 18px rgba(240,192,64,0.2);transform:translateY(-2px);}
   .c-icon{font-size:30px;margin-bottom:8px;}
   .c-name{font-size:13px;font-weight:700;color:var(--sand);}
-  /* multi-entree items */
   .entree-list{margin-bottom:16px;}
-  .entree-item{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;position:relative;}
+  .entree-item{background:var(--surface2);border:1.5px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
   .entree-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
   .entree-num{font-size:11px;color:var(--gold);font-weight:800;letter-spacing:2px;text-transform:uppercase;}
   .remove-btn{background:rgba(200,16,46,0.12);border:1px solid rgba(200,16,46,0.3);color:#ff6b6b;font-size:11px;font-weight:800;padding:3px 10px;border-radius:6px;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.15s;}
   .remove-btn:hover{background:rgba(200,16,46,0.25);}
   .add-entree-btn{width:100%;padding:12px;border-radius:12px;background:rgba(240,192,64,0.06);border:2px dashed var(--border);color:var(--muted);font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif;transition:all 0.2s;margin-bottom:16px;}
   .add-entree-btn:hover{border-color:var(--gold-dark);color:var(--gold);}
-  /* chips */
   .chip-grp{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
   .chip{padding:7px 13px;border-radius:100px;background:var(--surface);border:1.5px solid var(--border);font-size:13px;cursor:pointer;transition:all 0.18s;user-select:none;white-space:nowrap;font-weight:600;}
   .chip:hover{border-color:var(--gold-dark);}
   .chip.selected{background:var(--gold);border-color:var(--gold);color:#000;font-weight:800;box-shadow:0 2px 12px rgba(240,192,64,0.3);}
-  .free-tag{color:var(--green);font-size:11px;font-weight:800;margin-left:4px;}
+  /* Unavailable chips */
+  .chip.unavailable{cursor:not-allowed;border-color:rgba(255,68,68,0.35);background:rgba(255,68,68,0.05);color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:1px;pointer-events:none;}
+  .chip.unavailable .chip-name{text-decoration:line-through;text-decoration-color:#ff4444;text-decoration-thickness:2px;}
+  .chip.unavailable .chip-badge{font-size:9px;color:#ff6b6b;font-weight:800;letter-spacing:0.3px;}
   .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:16px 0;}
   .sub-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;font-weight:800;display:flex;align-items:center;gap:8px;}
   .sub-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
@@ -60,17 +60,14 @@
   .qty-pill{display:inline-flex;gap:4px;}
   .qty-pill button{padding:3px 10px;border-radius:6px;font-size:11px;border:1px solid var(--border);cursor:pointer;background:var(--surface);color:var(--muted);transition:all 0.15s;font-family:'Nunito',sans-serif;font-weight:700;}
   .qty-pill button.active{background:var(--gold);color:#000;border-color:var(--gold);}
-  /* schedule */
   .pick-sel{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:12px 16px;font-size:15px;font-family:'Nunito',sans-serif;color:var(--text);width:100%;transition:border-color 0.2s;font-weight:600;}
   .pick-sel:focus{outline:none;border-color:var(--gold);}
   .pick-sel option,.pick-sel optgroup{background:#111;}
-  /* inputs */
   .field-input{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:12px 16px;font-size:15px;font-family:'Nunito',sans-serif;color:var(--text);width:100%;transition:border-color 0.2s;font-weight:600;margin-bottom:8px;}
   .field-input:focus{outline:none;border-color:var(--gold);}
   .field-input::placeholder{color:var(--muted);}
   .note-box{font-size:12px;color:var(--muted);font-weight:600;line-height:1.5;background:rgba(240,192,64,0.06);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-top:2px;margin-bottom:14px;}
   .note-box strong{color:var(--gold);}
-  /* summary */
   .sum-box{background:var(--surface);border:2px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;}
   .sum-box::before{content:'𓂀';position:absolute;top:10px;right:14px;font-size:44px;opacity:0.05;pointer-events:none;}
   .sum-row{display:flex;justify-content:space-between;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px;}
@@ -96,7 +93,7 @@
 <body>
 <header>
   <div class="mascot-wrap">
-    <img src="https://i.ibb.co/YT3g6mdg/Chat-GPT-Image-Mar-3-2026-02-26-00-PM.png" alt="Pharaoh" onerror="this.parentElement.innerHTML='<span style=\'font-size:72px;line-height:1;\'>𓃭</span>'">
+    <img src="https://i.ibb.co/YT3g6mdg/Chat-GPT-Image-Mar-3-2026-02-26-00-PM.png" alt="Pharaoh" onerror="this.parentElement.innerHTML='<span style=\'font-size:72px;line-height:1;\'>&#x1337D;</span>'">
   </div>
   <div class="brand-title">Pharaoh's Cheap Chipotle</div>
   <div class="brand-sub">By Decree of the Pharaoh · Group Order Portal</div>
@@ -110,29 +107,30 @@
     <div class="step-dot"><div class="dot">3</div><div class="step-lbl">Review</div></div>
   </div>
 
-  <!-- S1: ORDER BUILDER (multi-entree) -->
+  <!-- S1: ORDER BUILDER -->
   <div class="section active" id="s0">
     <div class="sec-title">⚱️ Build Your Order</div>
     <div class="sec-hint">Add one or more items. Each entree gets its own protein, rice, beans, and toppings.</div>
 
+    <div class="sub-lbl">Your Name</div>
+    <input type="text" id="nameInput" class="field-input" placeholder="e.g. Alex, Rocky, Pharaoh..." oninput="O.name=this.value.trim()">
+    <div class="note-box" style="margin-bottom:20px;">This is the name your order will be placed under — can be anything you'd like.</div>
+
     <div class="entree-list" id="entreeList"></div>
     <button class="add-entree-btn" onclick="addEntree()">+ Add Another Item</button>
 
+    <div id="e0name" class="err">👑 Enter a name for your order!</div>
     <div id="e0order" class="err">👑 Add at least one item to your order!</div>
-    <div id="e0prot" class="err">👑 Every item needs at least one protein selected!</div>
+    <div id="e0prot" class="err">👑 Every item needs a protein selected!</div>
     <div class="nav-row">
       <button class="btn btn-p" onclick="nxt(0)">Next: Schedule →</button>
     </div>
   </div>
 
-  <!-- S2: SCHEDULE -->
+  <!-- S2: SCHEDULE & LOCATION -->
   <div class="section" id="s1">
-    <div class="sec-title">⏳ Schedule & Details</div>
-    <div class="sec-hint">Just a few quick details before we finalize your order.</div>
-
-    <div class="sub-lbl">Your Name</div>
-    <input type="text" id="nameInput" class="field-input" placeholder="e.g. Alex, Rocky, Pharaoh..." oninput="O.name=this.value.trim()">
-    <div class="note-box" style="margin-bottom:20px;">This is the name your order will be placed under — it can be anything you'd like.</div>
+    <div class="sec-title">⏳ Schedule & Location</div>
+    <div class="sec-hint">Pick your pickup time and confirm your Chipotle location.</div>
 
     <div class="sub-lbl">Chipotle Location</div>
     <input type="text" id="locInput" class="field-input" placeholder="e.g. 300 W 45th St, New York, NY 10036" oninput="O.location=this.value.trim()" style="margin-bottom:4px;">
@@ -147,11 +145,13 @@
       <option value="AKST">🕖 Alaska (AKST)</option>
       <option value="HST">🌺 Hawaii (HST)</option>
     </select>
+
     <div class="sub-lbl">Select a Pickup Time (<span id="tzLabel">EST</span>)</div>
     <p style="font-size:13px;color:var(--muted);margin-bottom:16px;font-weight:600;line-height:1.6;">Times are grouped by order batch — we place all orders together at once, so <strong style="color:var(--sand);">your order must be submitted before your batch's cutoff.</strong></p>
     <select class="pick-sel" id="pickSel" onchange="onPickupChange()" style="margin-bottom:16px;">
       <option value="">— Choose your pickup time —</option>
     </select>
+
     <div id="roundCallout" style="display:none;background:rgba(240,192,64,0.07);border:2px solid var(--gold-dark);border-radius:12px;padding:16px 20px;margin-bottom:8px;">
       <div style="font-size:12px;color:var(--muted);font-weight:600;line-height:1.6;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);">
         🛒 <strong style="color:var(--sand);">How this works:</strong> We collect all orders and place them together at Chipotle <em>at the same time</em> as a group. Your order will be submitted with the <strong style="color:var(--gold);" id="assignedRoundLabel">Round 1</strong> batch — meaning <strong style="color:var(--sand);">you must send us your order before the cutoff below</strong>, or it won't make it into this batch.
@@ -168,7 +168,7 @@
         </div>
       </div>
     </div>
-    <div id="e1name" class="err">👑 Enter your name for the order!</div>
+
     <div id="e1loc" class="err">👑 Enter your Chipotle's address to continue!</div>
     <div id="e1sched" class="err">👑 Please select a pickup time!</div>
     <div class="nav-row">
@@ -192,34 +192,80 @@
 </div>
 
 <script>
-// ── Constants ──────────────────────────────────────────────
-const TZ_OFFSET={EST:0,CST:-1,MST:-2,PST:-3,AKST:-4,HST:-5};
-const ROUNDS=[{qH:12,qM:0,eH:12,eM:30},{qH:15,qM:0,eH:15,eM:30},{qH:18,qM:0,eH:18,eM:30}];
-const ENTREES=[{val:'Burrito Bowl',icon:'🥣'},{val:'Burrito',icon:'🌯'},{val:'Quesadilla',icon:'🫓'},{val:'Salad Bowl',icon:'🥗'},{val:'Tacos',icon:'🌮'}];
-const PROTEINS=['Chicken','Steak','Beef Barbacoa','Carnitas','Sofritas','Veggie','Chicken Al Pastor'];
-const SALSAS=[{val:'Fresh Tomato Salsa',lbl:'Pico de Gallo'},{val:'Roasted Chili-Corn Salsa',lbl:'Corn Salsa'},{val:'Tomatillo-Green Chili Salsa',lbl:'Green Salsa'},{val:'Tomatillo-Red Chili Salsa',lbl:'Hot Red Salsa'},{val:'Sour Cream',lbl:'Sour Cream'}];
-const EXTRAS=[{val:'Fajita Veggies',lbl:'Fajita Veggies'},{val:'Cheese',lbl:'Cheese'},{val:'Romaine Lettuce',lbl:'Lettuce'},{val:'Guacamole',lbl:'Guacamole',free:true},{val:'Queso Blanco',lbl:'Queso Blanco',free:true}];
+// TZ offsets relative to EST (hours)
+const TZ_OFFSET = {EST:0, CST:-1, MST:-2, PST:-3, AKST:-4, HST:-5};
 
-// ── State ──────────────────────────────────────────────────
-// items = array of { entree, prot[], protQ{}, rice, riceQ, beans, beansQ, tops[], topQ{} }
-const O={items:[],round:null,pickup:'',name:'',location:''};
-let itemIdSeq=0;
+// Batch rounds defined in EST minutes from midnight
+// cutoff = when orders must be submitted; eH/eM = earliest pickup in that batch
+const ROUNDS = [
+  {qH:12, qM:0,  eH:12, eM:30},
+  {qH:15, qM:0,  eH:15, eM:30},
+  {qH:18, qM:0,  eH:18, eM:30}
+];
 
-// ── Navigation ─────────────────────────────────────────────
+// Close time: 11 PM EST = 1380 minutes. All time zones extend to their local 11 PM.
+// We define the window end as 23:00 LOCAL, which means 23:00 EST + offset for each TZ.
+// Since we always store/compare in EST minutes, local 11 PM = 23*60 EST + (-offset*60)
+// But simpler: we just let the dropdown go up to 23:00 IN THE SELECTED TZ.
+// So CLOSE_LOCAL_MINS = 23*60 = 1380 (in local time). We convert to EST only for option values.
+const CLOSE_LOCAL_MINS = 23 * 60; // 11:00 PM local
+
+const ENTREES = [
+  {val:'Burrito Bowl', icon:'🥣'},
+  {val:'Burrito',      icon:'🌯'},
+  {val:'Quesadilla',  icon:'🫓'},
+  {val:'Salad Bowl',  icon:'🥗'},
+  {val:'Tacos',       icon:'🌮'}
+];
+
+const PROTEINS = [
+  {val:'Chicken',          unavailable:false},
+  {val:'Steak',            unavailable:false},
+  {val:'Beef Barbacoa',    unavailable:false},
+  {val:'Carnitas',         unavailable:false},
+  {val:'Sofritas',         unavailable:false},
+  {val:'Veggie',           unavailable:true},
+  {val:'Chicken Al Pastor',unavailable:false, seasonal:true}
+];
+
+const SALSAS = [
+  {val:'Fresh Tomato Salsa',          lbl:'Pico de Gallo'},
+  {val:'Roasted Chili-Corn Salsa',    lbl:'Corn Salsa'},
+  {val:'Tomatillo-Green Chili Salsa', lbl:'Green Salsa'},
+  {val:'Tomatillo-Red Chili Salsa',   lbl:'Hot Red Salsa'},
+  {val:'Sour Cream',                  lbl:'Sour Cream'}
+];
+
+const EXTRAS = [
+  {val:'Fajita Veggies',  lbl:'Fajita Veggies', unavailable:false},
+  {val:'Cheese',          lbl:'Cheese',          unavailable:false},
+  {val:'Romaine Lettuce', lbl:'Lettuce',         unavailable:false},
+  {val:'Guacamole',       lbl:'Guacamole',       unavailable:true},
+  {val:'Queso Blanco',    lbl:'Queso Blanco',    unavailable:true}
+];
+
+const O = {items:[], round:null, pickup:'', name:'', location:''};
+let itemIdSeq = 0;
+
 function showStep(n){
   document.querySelectorAll('.section').forEach((s,i)=>s.classList.toggle('active',i===n));
-  document.querySelectorAll('.step-dot').forEach((d,i)=>{d.classList.remove('active','done');if(i===n)d.classList.add('active');else if(i<n)d.classList.add('done');});
-  window.scrollTo({top:0,behavior:'smooth'});
+  document.querySelectorAll('.step-dot').forEach((d,i)=>{
+    d.classList.remove('active','done');
+    if(i===n) d.classList.add('active');
+    else if(i<n) d.classList.add('done');
+  });
+  window.scrollTo({top:0, behavior:'smooth'});
 }
+
 function nxt(f){
   clrErr();
   if(f===0){
+    if(!O.name){showE('e0name');return;}
     if(O.items.length===0){showE('e0order');return;}
-    const bad=O.items.find(it=>it.prot.length===0);
+    const bad = O.items.find(it=>!it.prot);
     if(bad){showE('e0prot');return;}
   }
   if(f===1){
-    if(!O.name){showE('e1name');return;}
     if(!O.location){showE('e1loc');return;}
     if(!O.pickup){showE('e1sched');return;}
     buildSum();
@@ -230,23 +276,19 @@ function prv(f){showStep(f-1);}
 function showE(id){document.getElementById(id).classList.add('show');}
 function clrErr(){document.querySelectorAll('.err').forEach(e=>e.classList.remove('show'));}
 
-// ── Multi-Entree Builder ───────────────────────────────────
 function newItem(){
-  return{id:itemIdSeq++,entree:'',prot:[],protQ:{},rice:'',riceQ:'',beans:'',beansQ:'',tops:[],topQ:{}};
+  return {id:itemIdSeq++, entree:'', prot:'', protQ:'Regular', rice:'', riceQ:'', beans:'', beansQ:'', tops:[], topQ:{}};
 }
-function addEntree(){
-  const item=newItem();
-  O.items.push(item);
-  renderEntreeList();
-}
-function removeEntree(id){
-  O.items=O.items.filter(it=>it.id!==id);
-  renderEntreeList();
-}
+function addEntree(){O.items.push(newItem());renderEntreeList();}
+function removeEntree(id){O.items=O.items.filter(it=>it.id!==id);renderEntreeList();}
+
 function renderEntreeList(){
   const el=document.getElementById('entreeList');
   el.innerHTML='';
-  if(O.items.length===0){el.innerHTML='<p style="font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:600;">No items yet — select an entree below to start building your order.</p>';return;}
+  if(O.items.length===0){
+    el.innerHTML='<p style="font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:600;">No items yet — use the button below to start building.</p>';
+    return;
+  }
   O.items.forEach((item,idx)=>{
     const div=document.createElement('div');
     div.className='entree-item';
@@ -255,242 +297,326 @@ function renderEntreeList(){
     el.appendChild(div);
   });
 }
+
+function esc(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'");}
+
 function buildItemHTML(item,idx){
-  const removeBtn=O.items.length>1?`<button class="remove-btn" onclick="removeEntree(${item.id})">✕ Remove</button>`:'';
-  // Entree picker
-  const entreePicker=ENTREES.map(e=>`
-    <div class="card${item.entree===e.val?' selected':''}" onclick="setItemEntree(${item.id},'${e.val}',this)" style="padding:12px 8px;">
+  const rb = O.items.length>1 ? `<button class="remove-btn" onclick="removeEntree(${item.id})">✕ Remove</button>` : '';
+
+  // Entree cards
+  const ep = ENTREES.map(e=>
+    `<div class="card${item.entree===e.val?' selected':''}" onclick="setItemEntree(${item.id},'${esc(e.val)}')">
       <div class="c-icon" style="font-size:24px;">${e.icon}</div>
       <div class="c-name" style="font-size:12px;">${e.val}</div>
-    </div>`).join('');
-  // Protein chips
-  const protChips=PROTEINS.map(p=>`
-    <div class="chip${item.prot.includes(p)?' selected':''}" onclick="toggleItemProt(${item.id},'${p}',this)">${p}${p==='Chicken Al Pastor'?' 🌶️':''}</div>`).join('');
-  // Protein qty mods
-  const protMods=buildProtMods(item);
+    </div>`
+  ).join('');
+
+  // Proteins — single select, unavailable ones crossed out
+  const pc = PROTEINS.map(p=>{
+    if(p.unavailable){
+      return `<div class="chip unavailable">
+        <span class="chip-name">${p.val}</span>
+        <span class="chip-badge">⛔ Temporarily Unavailable</span>
+      </div>`;
+    }
+    const sel = item.prot===p.val ? ' selected' : '';
+    const tag = p.seasonal ? ' 🌶️' : '';
+    return `<div class="chip${sel}" onclick="setItemProt(${item.id},'${esc(p.val)}')">${p.val}${tag}</div>`;
+  }).join('');
+
+  // Protein quantity (no Double option)
+  const pm = item.prot ? buildQtyRow(item.id,'protQ',item.prot,item.protQ,['Regular','Extra','Light']) : '';
+
   // Rice
-  const riceChips=['White Rice','Brown Rice','no rice'].map(r=>`
-    <div class="chip${item.rice===r?' selected':''}" onclick="setItemSingle(${item.id},'rice','${r}',this)">${r==='no rice'?'No Rice':r}</div>`).join('');
-  const riceMod=item.rice&&item.rice!=='no rice'?buildQtyMod(`item${item.id}_rice`,item.rice,`riceQ_${item.id}`,item.riceQ):'';
+  const rc = ['White Rice','Brown Rice','no rice'].map(r=>
+    `<div class="chip${item.rice===r?' selected':''}" onclick="setItemSingle(${item.id},'rice','${esc(r)}')">${r==='no rice'?'No Rice':r}</div>`
+  ).join('');
+  const rm = (item.rice && item.rice!=='no rice') ? buildQtyRow(item.id,'riceQ',item.rice,item.riceQ,['Regular','Extra','Light','Side']) : '';
+
   // Beans
-  const beanChips=['Black Beans','Pinto Beans','no beans'].map(b=>`
-    <div class="chip${item.beans===b?' selected':''}" onclick="setItemSingle(${item.id},'beans','${b}',this)">${b==='no beans'?'No Beans':b}</div>`).join('');
-  const beanMod=item.beans&&item.beans!=='no beans'?buildQtyMod(`item${item.id}_beans`,item.beans,`beansQ_${item.id}`,item.beansQ):'';
-  // Toppings
-  const salChips=SALSAS.map(s=>`
-    <div class="chip${item.tops.includes(s.val)?' selected':''}" onclick="toggleItemTop(${item.id},'${s.val}',this)">${s.lbl}</div>`).join('');
-  const extChips=EXTRAS.map(e=>`
-    <div class="chip${item.tops.includes(e.val)?' selected':''}" onclick="toggleItemTop(${item.id},'${e.val}',this)">${e.lbl}${e.free?'<span class="free-tag">(free)</span>':''}</div>`).join('');
-  const topMods=buildTopMods(item);
+  const bc = ['Black Beans','Pinto Beans','no beans'].map(b=>
+    `<div class="chip${item.beans===b?' selected':''}" onclick="setItemSingle(${item.id},'beans','${esc(b)}')">${b==='no beans'?'No Beans':b}</div>`
+  ).join('');
+  const bm = (item.beans && item.beans!=='no beans') ? buildQtyRow(item.id,'beansQ',item.beans,item.beansQ,['Regular','Extra','Light','Side']) : '';
+
+  // Salsas
+  const sc = SALSAS.map(s=>
+    `<div class="chip${item.tops.includes(s.val)?' selected':''}" onclick="toggleItemTop(${item.id},'${esc(s.val)}')">${s.lbl}</div>`
+  ).join('');
+
+  // Extras — guac and queso unavailable
+  const ec = EXTRAS.map(e=>{
+    if(e.unavailable){
+      return `<div class="chip unavailable">
+        <span class="chip-name">${e.lbl}</span>
+        <span class="chip-badge">⛔ Temporarily Unavailable</span>
+      </div>`;
+    }
+    return `<div class="chip${item.tops.includes(e.val)?' selected':''}" onclick="toggleItemTop(${item.id},'${esc(e.val)}')">${e.lbl}</div>`;
+  }).join('');
+
+  // Topping quantity modifiers
+  const tm = buildTopMods(item);
 
   return `
     <div class="entree-item-header">
-      <span class="entree-num">Item ${idx+1}</span>
-      ${removeBtn}
+      <span class="entree-num">Item ${idx+1}</span>${rb}
     </div>
     <div class="sub-lbl" style="margin-bottom:8px;">Entree</div>
-    <div class="card-grid" style="margin-bottom:14px;">${entreePicker}</div>
+    <div class="card-grid" style="margin-bottom:14px;">${ep}</div>
     <div class="divider"></div>
-    <div class="sub-lbl" style="margin-bottom:6px;">Protein <span style="font-size:9px;color:var(--muted);font-weight:600;">(up to 2)</span></div>
-    <div style="margin-bottom:6px;"><div class="seasonal" style="font-size:10px;">🌶️ Seasonal — Chicken Al Pastor</div></div>
-    <div class="chip-grp">${protChips}</div>
-    <div id="protMods_${item.id}" style="margin-bottom:10px;">${protMods}</div>
+    <div class="sub-lbl" style="margin-bottom:6px;">Protein <span style="font-size:9px;color:var(--muted);font-weight:600;">(choose one)</span></div>
+    <div style="margin-bottom:8px;"><div class="seasonal">🌶️ Seasonal — Chicken Al Pastor</div></div>
+    <div class="chip-grp">${pc}</div>
+    <div id="protMods_${item.id}" style="margin-bottom:10px;">${pm}</div>
     <div class="divider"></div>
     <div class="sub-lbl" style="margin-bottom:8px;">Rice</div>
-    <div class="chip-grp">${riceChips}</div>
-    <div id="riceMod_${item.id}">${riceMod}</div>
+    <div class="chip-grp">${rc}</div>
+    <div id="riceMod_${item.id}">${rm}</div>
     <div class="divider"></div>
     <div class="sub-lbl" style="margin-bottom:8px;">Beans</div>
-    <div class="chip-grp">${beanChips}</div>
-    <div id="beanMod_${item.id}">${beanMod}</div>
+    <div class="chip-grp">${bc}</div>
+    <div id="beanMod_${item.id}">${bm}</div>
     <div class="divider"></div>
     <div class="sub-lbl" style="margin-bottom:8px;">Toppings</div>
-    <div class="chip-grp">${salChips}</div>
-    <div class="chip-grp">${extChips}</div>
-    <div id="topMods_${item.id}">${topMods}</div>`;
+    <div class="chip-grp">${sc}</div>
+    <div class="chip-grp">${ec}</div>
+    <div id="topMods_${item.id}">${tm}</div>`;
 }
 
-function buildProtMods(item){
-  if(!item.prot.length)return'';
-  const two=item.prot.length===2;
-  return item.prot.map(p=>{
-    // single protein: Regular or Double(free)
-    // two proteins: Half or Whole(each gets a full portion, free)
-    const avail=two?['Half','Whole']:['Regular','Double'];
-    if(!item.protQ[p]){item.protQ[p]=two?'Half':'Regular';}
-    // if switching from 1->2 protein and still has Regular/Double, reset to Half
-    if(two&&(item.protQ[p]==='Regular'||item.protQ[p]==='Double'))item.protQ[p]='Half';
-    // if switching from 2->1 protein and still has Half/Whole, reset to Regular
-    if(!two&&(item.protQ[p]==='Half'||item.protQ[p]==='Whole'))item.protQ[p]='Regular';
-    const cur=item.protQ[p];
-    const btns=avail.map(o=>{
-      const freeTag=(o==='Double'||o==='Whole')?'<span class="free-tag" style="pointer-events:none;">(free)</span>':'';
-      return `<button class="${cur===o?'active':''}" onclick="setItemProtQ(${item.id},'${p}','${o}',this)">${o}${freeTag}</button>`;
-    }).join('');
-    return `<div class="mod-row"><span class="mod-lbl">${p}</span><div class="qty-pill">${btns}</div></div>`;
-  }).join('');
+function buildQtyRow(itemId, field, label, cur, opts){
+  cur = cur || opts[0];
+  const btns = opts.map(o=>
+    `<button class="${cur===o?'active':''}" onclick="setFieldVal(${itemId},'${field}','${o}',this)">${o}</button>`
+  ).join('');
+  return `<div class="mod-row" style="margin-bottom:10px;">
+    <span class="mod-lbl" style="font-size:12px;color:var(--muted);">${label}:</span>
+    <div class="qty-pill">${btns}</div>
+  </div>`;
 }
-function buildQtyMod(prefix,lbl,field,cur){
-  cur=cur||'Regular';
-  return`<div class="mod-row" style="margin-bottom:10px;"><span class="mod-lbl" style="font-size:12px;color:var(--muted);">${lbl}:</span><div class="qty-pill">${['Regular','Extra','Light','Side'].map(o=>`<button class="${cur===o?'active':''}" onclick="setItemFieldQ('${field}',this,'${o}')">${o}</button>`).join('')}</div></div>`;
-}
+
 function buildTopMods(item){
-  if(!item.tops.length)return'';
-  return`<div style="margin-top:6px;">`+item.tops.map(t=>{
-    const cur=item.topQ[t]||'Regular';
-    return`<div class="mod-row"><span class="mod-lbl">${t}</span><div class="qty-pill">${['Regular','Extra','Light','Side'].map(o=>`<button class="${cur===o?'active':''}" onclick="setItemTopQ(${item.id},'${t}','${o}',this)">${o}</button>`).join('')}</div></div>`;
-  }).join('')+`</div>`;
+  if(!item.tops.length) return '';
+  return '<div style="margin-top:6px;">' + item.tops.map(t=>{
+    const cur = item.topQ[t]||'Regular';
+    const btns = ['Regular','Extra','Light','Side'].map(o=>
+      `<button class="${cur===o?'active':''}" onclick="setTopQVal(${item.id},'${esc(t)}','${o}',this)">${o}</button>`
+    ).join('');
+    return `<div class="mod-row">
+      <span class="mod-lbl">${t}</span>
+      <div class="qty-pill">${btns}</div>
+    </div>`;
+  }).join('') + '</div>';
 }
 
-// Item mutation helpers — partial re-render of just the changed item
 function reRenderItem(id){
-  const item=O.items.find(it=>it.id===id);
-  const idx=O.items.indexOf(item);
-  const el=document.getElementById(`item-${id}`);
-  if(el)el.innerHTML=buildItemHTML(item,idx);
+  const item = O.items.find(it=>it.id===id);
+  const idx = O.items.indexOf(item);
+  const el = document.getElementById(`item-${id}`);
+  if(el) el.innerHTML = buildItemHTML(item,idx);
 }
-function setItemEntree(id,val){const item=O.items.find(it=>it.id===id);item.entree=val;reRenderItem(id);}
-function toggleItemProt(id,val){
-  const item=O.items.find(it=>it.id===id);
-  if(item.prot.includes(val))item.prot=item.prot.filter(p=>p!==val);
-  else if(item.prot.length<2)item.prot.push(val);
-  // enforce Half if two proteins
-  if(item.prot.length===2)item.prot.forEach(p=>{item.protQ[p]='Half';});
+
+function setItemEntree(id,val){
+  O.items.find(it=>it.id===id).entree=val;
   reRenderItem(id);
 }
-function setItemProtQ(id,prot,val){const item=O.items.find(it=>it.id===id);item.protQ[prot]=val;reRenderItem(id);}
+
+// Single-select protein (radio behavior)
+function setItemProt(id,val){
+  const item = O.items.find(it=>it.id===id);
+  item.prot = (item.prot===val) ? '' : val;  // click same to deselect
+  item.protQ = 'Regular';
+  reRenderItem(id);
+}
+
 function setItemSingle(id,field,val){
-  const item=O.items.find(it=>it.id===id);
-  item[field]=val;item[field+'Q']='';
+  const item = O.items.find(it=>it.id===id);
+  item[field]=val;
+  item[field+'Q']='';
   reRenderItem(id);
 }
-function setItemFieldQ(field,btn,val){
-  // field is like "riceQ_0" or "beansQ_2"
-  const parts=field.split('_');
-  const fld=parts[0]; // riceQ or beansQ
-  const id=parseInt(parts[1]);
-  const item=O.items.find(it=>it.id===id);
-  item[fld]=val;
-  btn.closest('.qty-pill').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.textContent.trim()===val));
+
+function setFieldVal(id,field,val,btn){
+  const item = O.items.find(it=>it.id===id);
+  item[field]=val;
+  btn.closest('.qty-pill').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
+
 function toggleItemTop(id,val){
-  const item=O.items.find(it=>it.id===id);
-  if(item.tops.includes(val))item.tops=item.tops.filter(t=>t!==val);
+  const item = O.items.find(it=>it.id===id);
+  if(item.tops.includes(val)) item.tops=item.tops.filter(t=>t!==val);
   else item.tops.push(val);
   reRenderItem(id);
 }
-function setItemTopQ(id,top,val){const item=O.items.find(it=>it.id===id);item.topQ[top]=val;reRenderItem(id);}
 
-// ── Schedule ───────────────────────────────────────────────
-function fmtMins(mins,tz){
-  let hh=Math.floor(mins/60),mm=mins%60;hh=((hh%24)+24)%24;
-  const ap=hh>=12?'PM':'AM';let h12=hh%12;if(h12===0)h12=12;
-  return`${h12}:${mm.toString().padStart(2,'0')} ${ap} ${tz}`;
+function setTopQVal(id,top,val,btn){
+  const item = O.items.find(it=>it.id===id);
+  item.topQ[top]=val;
+  btn.closest('.qty-pill').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
-function updateRoundLabels(){document.getElementById('tzLabel').textContent=document.getElementById('tzSel').value;}
+
+// --- Time / Dropdown Logic ---
+// All times stored and displayed in local TZ. No EST conversion needed for display.
+// Batch cutoffs shift with TZ offset.
+
+function fmtLocalMins(mins){
+  // normalize
+  mins = ((mins % 1440) + 1440) % 1440;
+  const hh = Math.floor(mins/60), mm = mins%60;
+  const ap = hh>=12 ? 'PM' : 'AM';
+  let h12 = hh%12; if(h12===0) h12=12;
+  return `${h12}:${mm.toString().padStart(2,'0')} ${ap}`;
+}
+
+function getLocalMins(estMins, tzOffsetHours){
+  // Convert EST minutes to local minutes
+  return estMins + tzOffsetHours*60;
+}
+
+function updateRoundLabels(){
+  document.getElementById('tzLabel').textContent = document.getElementById('tzSel').value;
+}
+
 function onTzChange(){
-  O.pickup='';O.round=null;
+  O.pickup=''; O.round=null;
   document.getElementById('roundCallout').style.display='none';
   document.getElementById('pickSel').value='';
-  updateRoundLabels();buildPickupDropdown();
-}
-function buildPickupDropdown(){
-  const tz=document.getElementById('tzSel').value,off=TZ_OFFSET[tz];
-  const sel=document.getElementById('pickSel');
-  sel.innerHTML='<option value="">— Choose your pickup time —</option>';
-  const closeEST=21*60;
-  ROUNDS.forEach((r,i)=>{
-    const roundNum=i+1;
-    const startEST=r.eH*60+r.eM;
-    const endEST=i<ROUNDS.length-1?ROUNDS[i+1].eH*60+ROUNDS[i+1].eM-1:closeEST;
-    const group=document.createElement('optgroup');
-    group.label=`── Batch ${roundNum}  ·  Submit before ${fmtMins((r.qH*60+r.qM)+off*60,tz)} ──`;
-    for(let t=startEST;t<=Math.min(endEST,closeEST);t+=15){
-      const lbl=fmtMins(t+off*60,tz);
-      const o=document.createElement('option');
-      o.value=JSON.stringify({time:lbl,round:roundNum});
-      o.textContent=lbl;group.appendChild(o);
-    }
-    if(group.children.length>0)sel.appendChild(group);
-  });
-}
-function onPickupChange(){
-  const sel=document.getElementById('pickSel');
-  if(!sel.value){O.pickup='';O.round=null;document.getElementById('roundCallout').style.display='none';return;}
-  const data=JSON.parse(sel.value);
-  O.pickup=data.time;O.round=data.round;
-  const tz=document.getElementById('tzSel').value,off=TZ_OFFSET[tz];
-  const r=ROUNDS[data.round-1];
-  const cutoff=fmtMins((r.qH*60+r.qM)+off*60,tz);
-  document.getElementById('assignedRoundLabel').textContent=`Round ${data.round}`;
-  document.getElementById('assignedRoundBadge').textContent=`Round ${data.round}`;
-  document.getElementById('assignedCutoff').textContent=cutoff;
-  document.getElementById('roundCallout').style.display='block';
+  updateRoundLabels();
+  buildPickupDropdown();
 }
 
-// ── Summary & Discord output ───────────────────────────────
-function fmtQ(val,qty){return(!qty||qty==='Regular')?val:`${qty} ${val}`;}
+function buildPickupDropdown(){
+  const tz = document.getElementById('tzSel').value;
+  const off = TZ_OFFSET[tz] || 0;
+  const sel = document.getElementById('pickSel');
+  sel.innerHTML = '<option value="">— Choose your pickup time —</option>';
+
+  // Close at 11 PM LOCAL = CLOSE_LOCAL_MINS
+  const closeMinsLocal = CLOSE_LOCAL_MINS; // 1380
+
+  ROUNDS.forEach((r, i) => {
+    const roundNum = i + 1;
+
+    // Convert EST times to local
+    const startLocal = getLocalMins(r.eH*60 + r.eM, off);
+    const cutoffLocal = getLocalMins(r.qH*60 + r.qM, off);
+
+    // End of this batch window: start of next batch local - 1 min, or 11 PM local
+    let endLocal;
+    if(i < ROUNDS.length - 1){
+      endLocal = getLocalMins(ROUNDS[i+1].eH*60 + ROUNDS[i+1].eM, off) - 1;
+    } else {
+      endLocal = closeMinsLocal;
+    }
+    // Cap at 11 PM local
+    endLocal = Math.min(endLocal, closeMinsLocal);
+
+    const cutoffLabel = fmtLocalMins(cutoffLocal) + ' ' + tz;
+    const group = document.createElement('optgroup');
+    group.label = `── Batch ${roundNum}  ·  Submit before ${cutoffLabel} ──`;
+
+    for(let t = startLocal; t <= endLocal; t += 15){
+      const lbl = fmtLocalMins(t) + ' ' + tz;
+      const o = document.createElement('option');
+      o.value = JSON.stringify({time:lbl, round:roundNum, cutoffLocal:cutoffLocal, tz:tz});
+      o.textContent = lbl;
+      group.appendChild(o);
+    }
+    if(group.children.length > 0) sel.appendChild(group);
+  });
+}
+
+function onPickupChange(){
+  const sel = document.getElementById('pickSel');
+  if(!sel.value){
+    O.pickup=''; O.round=null;
+    document.getElementById('roundCallout').style.display='none';
+    return;
+  }
+  const data = JSON.parse(sel.value);
+  O.pickup = data.time;
+  O.round = data.round;
+  const cutoffStr = fmtLocalMins(data.cutoffLocal) + ' ' + data.tz;
+  document.getElementById('assignedRoundLabel').textContent = `Round ${data.round}`;
+  document.getElementById('assignedRoundBadge').textContent = `Round ${data.round}`;
+  document.getElementById('assignedCutoff').textContent = cutoffStr;
+  document.getElementById('roundCallout').style.display = 'block';
+}
+
+// --- Summary / Output ---
+function fmtQ(val, qty){
+  if(!qty || qty==='Regular') return val;
+  return `${qty} ${val}`;
+}
+
 function buildSum(){
-  // Summary card
-  let sumHTML='';
+  let sumHTML = '';
+
   O.items.forEach((item,idx)=>{
-    const two=item.prot.length===2;
-    const protLine=two?item.prot.map(p=>{const q=item.protQ[p]||'Half';return`${q} ${p}`;}).join(' & '):item.prot.map(p=>{const q=item.protQ[p]||'Regular';return q==='Double'?`Double ${p}`:p;}).join(', ');
-    const rD=!item.rice?'—':(item.rice==='no rice'?'No Rice':fmtQ(item.rice,item.riceQ));
-    const bD=!item.beans?'—':(item.beans==='no beans'?'No Beans':fmtQ(item.beans,item.beansQ));
-    const tList=item.tops.map(t=>fmtQ(t,item.topQ[t]||'Regular')).join(', ')||'None';
-    sumHTML+=`<div class="sum-entree-block">
-      <div class="sum-entree-title">Item ${idx+1}</div>
-      ${[['Entree',item.entree||'—'],['Protein',protLine||'—'],['Rice',rD],['Beans',bD],['Toppings',tList]].map(([k,v])=>`<div class="sum-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('')}
+    const protLine = item.prot
+      ? fmtQ(item.prot, item.protQ)
+      : '—';
+    const rD = !item.rice ? '—' : (item.rice==='no rice' ? 'No Rice' : fmtQ(item.rice, item.riceQ));
+    const bD = !item.beans ? '—' : (item.beans==='no beans' ? 'No Beans' : fmtQ(item.beans, item.beansQ));
+    const tList = item.tops.map(t=>fmtQ(t, item.topQ[t]||'Regular')).join(', ') || 'None';
+
+    sumHTML += `<div class="sum-entree-block">
+      <div class="sum-entree-title">Order ${idx+1}</div>
+      ${[['Entree',item.entree||'—'],['Protein',protLine],['Rice',rD],['Beans',bD],['Toppings',tList]]
+        .map(([k,v])=>`<div class="sum-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('')}
     </div>`;
   });
-  sumHTML+=`<div class="sum-row"><span class="k">Order Batch</span><span class="v">Round ${O.round}</span></div>`;
-  sumHTML+=`<div class="sum-row"><span class="k">Pickup Time</span><span class="v">${O.pickup}</span></div>`;
-  sumHTML+=`<div class="sum-row"><span class="k">Location</span><span class="v">${O.location}</span></div>`;
-  sumHTML+=`<div class="sum-row"><span class="k">Name</span><span class="v">${O.name}</span></div>`;
-  document.getElementById('sumBox').innerHTML=sumHTML;
 
-  // Discord output — one block per item in bot format
-  const lines=[];
-  O.items.forEach((item,idx)=>{
-    const two=item.prot.length===2;
-    const protLine=two?item.prot.map(p=>{const q=item.protQ[p]||'Half';return`${q} ${p}`;}).join(' & '):item.prot.map(p=>{const q=item.protQ[p]||'Regular';return q==='Double'?`Double ${p}`:p;}).join(', ');
-    const rD=!item.rice?'No Rice':(item.rice==='no rice'?'No Rice':fmtQ(item.rice,item.riceQ));
-    const bD=!item.beans?'No Beans':(item.beans==='no beans'?'No Beans':fmtQ(item.beans,item.beansQ));
-    if(idx>0)lines.push('');
-    lines.push(`Order ${O.round}:`);
-    lines.push(O.name+(O.items.length>1?` (Item ${idx+1})`:''));
-    lines.push(item.entree||'—');
-    lines.push(protLine||'—');
+  sumHTML += `<div class="sum-row"><span class="k">Pickup Time</span><span class="v">${O.pickup}</span></div>`;
+  sumHTML += `<div class="sum-row"><span class="k">Location</span><span class="v">${O.location}</span></div>`;
+  sumHTML += `<div class="sum-row"><span class="k">Name</span><span class="v">${O.name}</span></div>`;
+  document.getElementById('sumBox').innerHTML = sumHTML;
+
+  // ---- Plain text output in requested format ----
+  const lines = [];
+  lines.push(`Location: ${O.location}`);
+  lines.push(`Pickup: ${O.pickup}`);
+
+  O.items.forEach((item, idx) => {
+    const protLine = item.prot ? fmtQ(item.prot, item.protQ) : '—';
+    const rD = !item.rice ? 'No Rice' : (item.rice==='no rice' ? 'No Rice' : fmtQ(item.rice, item.riceQ));
+    const bD = !item.beans ? 'No Beans' : (item.beans==='no beans' ? 'No Beans' : fmtQ(item.beans, item.beansQ));
+
+    lines.push('');
+    lines.push(`Order ${idx+1}:`);
+    lines.push(O.name);
+    lines.push(item.entree || '—');
+    lines.push(protLine);
     lines.push(rD);
     lines.push(bD);
-    item.tops.forEach(t=>lines.push(fmtQ(t,item.topQ[t]||'Regular')));
+    item.tops.forEach(t => lines.push(fmtQ(t, item.topQ[t]||'Regular')));
   });
-  lines.push('');
-  lines.push(`Pickup: ${O.pickup}`);
-  lines.push(`Location: ${O.location}`);
-  document.getElementById('outTxt').textContent=lines.join('\n');
+
+  document.getElementById('outTxt').textContent = lines.join('\n');
 }
+
 function cpyOrder(){
   navigator.clipboard.writeText(document.getElementById('outTxt').textContent).then(()=>{
-    const b=document.getElementById('cpyBtn');b.textContent='✓ Copied!';b.classList.add('copied');
-    setTimeout(()=>{b.textContent='Copy';b.classList.remove('copied');},2000);
+    const b = document.getElementById('cpyBtn');
+    b.textContent='✓ Copied!'; b.classList.add('copied');
+    setTimeout(()=>{b.textContent='Copy'; b.classList.remove('copied');}, 2000);
   });
 }
+
 function resetAll(){
-  O.items=[];O.round=null;O.pickup='';O.name='';O.location='';itemIdSeq=0;
+  O.items=[]; O.round=null; O.pickup=''; O.name=''; O.location=''; itemIdSeq=0;
   document.getElementById('nameInput').value='';
   document.getElementById('locInput').value='';
   document.getElementById('pickSel').value='';
   document.getElementById('roundCallout').style.display='none';
   document.getElementById('tzSel').value='EST';
-  renderEntreeList();
-  updateRoundLabels();buildPickupDropdown();
-  showStep(0);
+  renderEntreeList(); updateRoundLabels(); buildPickupDropdown(); showStep(0);
 }
 
-// ── Init ───────────────────────────────────────────────────
-addEntree(); // start with one blank entree
+// Init
+addEntree();
 updateRoundLabels();
 buildPickupDropdown();
 </script>
