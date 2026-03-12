@@ -100,6 +100,17 @@
 </header>
 <div class="hiero">𓂀 𓆣 𓇯 𓊪 𓅓 𓆣 𓂀</div>
 
+<!-- BACK IN STOCK BANNER -->
+<div style="max-width:700px;margin:0 auto 0;padding:0 20px;">
+  <div style="background:linear-gradient(135deg,rgba(74,222,128,0.12),rgba(74,222,128,0.06));border:2px solid rgba(74,222,128,0.5);border-radius:14px;padding:14px 20px;display:flex;align-items:center;gap:14px;margin-bottom:4px;">
+    <div style="font-size:28px;line-height:1;">🎉</div>
+    <div>
+      <div style="font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:#4ade80;letter-spacing:1px;margin-bottom:3px;">They're Back!</div>
+      <div style="font-size:12px;color:#a8ffb0;font-weight:600;line-height:1.5;">Guac, Queso, Veggie protein, Double &amp; Half portions are all available again 🙌</div>
+    </div>
+  </div>
+</div>
+
 <div class="container">
   <div class="steps">
     <div class="step-dot active"><div class="dot">1</div><div class="step-lbl">Order</div></div>
@@ -224,7 +235,7 @@ const PROTEINS = [
   {val:'Beef Barbacoa',    unavailable:false},
   {val:'Carnitas',         unavailable:false},
   {val:'Sofritas',         unavailable:false},
-  {val:'Veggie',           unavailable:true},
+  {val:'Veggie',           unavailable:false},
   {val:'Chicken Al Pastor',unavailable:false, seasonal:true}
 ];
 
@@ -240,8 +251,8 @@ const EXTRAS = [
   {val:'Fajita Veggies',  lbl:'Fajita Veggies', unavailable:false},
   {val:'Cheese',          lbl:'Cheese',          unavailable:false},
   {val:'Romaine Lettuce', lbl:'Lettuce',         unavailable:false},
-  {val:'Guacamole',       lbl:'Guacamole',       unavailable:true},
-  {val:'Queso Blanco',    lbl:'Queso Blanco',    unavailable:true}
+  {val:'Guacamole',       lbl:'Guacamole',       unavailable:false},
+  {val:'Queso Blanco',    lbl:'Queso Blanco',    unavailable:false}
 ];
 
 const O = {items:[], round:null, pickup:'', name:'', location:''};
@@ -262,7 +273,7 @@ function nxt(f){
   if(f===0){
     if(!O.name){showE('e0name');return;}
     if(O.items.length===0){showE('e0order');return;}
-    const bad = O.items.find(it=>!it.prot);
+    const bad = O.items.find(it=>it.prot.length===0);
     if(bad){showE('e0prot');return;}
   }
   if(f===1){
@@ -277,7 +288,7 @@ function showE(id){document.getElementById(id).classList.add('show');}
 function clrErr(){document.querySelectorAll('.err').forEach(e=>e.classList.remove('show'));}
 
 function newItem(){
-  return {id:itemIdSeq++, entree:'', prot:'', protQ:'Regular', rice:'', riceQ:'', beans:'', beansQ:'', tops:[], topQ:{}};
+  return {id:itemIdSeq++, entree:'', prot:[], protQ:{}, rice:'', riceQ:'', beans:'', beansQ:'', tops:[], topQ:{}};
 }
 function addEntree(){O.items.push(newItem());renderEntreeList();}
 function removeEntree(id){O.items=O.items.filter(it=>it.id!==id);renderEntreeList();}
@@ -311,7 +322,7 @@ function buildItemHTML(item,idx){
     </div>`
   ).join('');
 
-  // Proteins — single select, unavailable ones crossed out
+  // Proteins — up to 2, unavailable ones crossed out
   const pc = PROTEINS.map(p=>{
     if(p.unavailable){
       return `<div class="chip unavailable">
@@ -319,13 +330,26 @@ function buildItemHTML(item,idx){
         <span class="chip-badge">⛔ Temporarily Unavailable</span>
       </div>`;
     }
-    const sel = item.prot===p.val ? ' selected' : '';
+    const sel = item.prot.includes(p.val) ? ' selected' : '';
     const tag = p.seasonal ? ' 🌶️' : '';
-    return `<div class="chip${sel}" onclick="setItemProt(${item.id},'${esc(p.val)}')">${p.val}${tag}</div>`;
+    return `<div class="chip${sel}" onclick="toggleItemProt(${item.id},'${esc(p.val)}')">${p.val}${tag}</div>`;
   }).join('');
 
-  // Protein quantity (no Double option)
-  const pm = item.prot ? buildQtyRow(item.id,'protQ',item.prot,item.protQ,['Regular','Extra','Light']) : '';
+  // Protein quantity:
+  // 1 protein selected → Regular / Double
+  // 2 proteins selected → Half / Whole (per protein)
+  const two = item.prot.length === 2;
+  const pm = item.prot.length > 0 ? item.prot.map(p => {
+    const opts = two ? ['Half','Whole'] : ['Regular','Double'];
+    const cur = item.protQ[p] || opts[0];
+    const btns = opts.map(o =>
+      `<button class="${cur===o?'active':''}" onclick="setProtQ(${item.id},'${esc(p)}','${o}',this)">${o}</button>`
+    ).join('');
+    return `<div class="mod-row" style="margin-bottom:10px;">
+      <span class="mod-lbl" style="font-size:12px;color:var(--muted);">${p}:</span>
+      <div class="qty-pill">${btns}</div>
+    </div>`;
+  }).join('') : '';
 
   // Rice
   const rc = ['White Rice','Brown Rice','no rice'].map(r=>
@@ -365,7 +389,7 @@ function buildItemHTML(item,idx){
     <div class="sub-lbl" style="margin-bottom:8px;">Entree</div>
     <div class="card-grid" style="margin-bottom:14px;">${ep}</div>
     <div class="divider"></div>
-    <div class="sub-lbl" style="margin-bottom:6px;">Protein <span style="font-size:9px;color:var(--muted);font-weight:600;">(choose one)</span></div>
+    <div class="sub-lbl" style="margin-bottom:6px;">Protein <span style="font-size:9px;color:var(--muted);font-weight:600;">(up to 2)</span></div>
     <div style="margin-bottom:8px;"><div class="seasonal">🌶️ Seasonal — Chicken Al Pastor</div></div>
     <div class="chip-grp">${pc}</div>
     <div id="protMods_${item.id}" style="margin-bottom:10px;">${pm}</div>
@@ -421,12 +445,36 @@ function setItemEntree(id,val){
   reRenderItem(id);
 }
 
-// Single-select protein (radio behavior)
-function setItemProt(id,val){
+// Multi-select protein (up to 2), with protQ as object keyed by protein name
+function toggleItemProt(id,val){
   const item = O.items.find(it=>it.id===id);
-  item.prot = (item.prot===val) ? '' : val;  // click same to deselect
-  item.protQ = 'Regular';
+  if(item.prot.includes(val)){
+    item.prot = item.prot.filter(p=>p!==val);
+    delete item.protQ[val];
+  } else if(item.prot.length < 2){
+    item.prot.push(val);
+    // Default qty based on how many are now selected
+    item.protQ[val] = item.prot.length === 2 ? 'Half' : 'Regular';
+  }
+  // If we now have 2, reset both to Half/Whole defaults
+  if(item.prot.length === 2){
+    item.prot.forEach(p=>{
+      if(item.protQ[p]==='Regular'||item.protQ[p]==='Double') item.protQ[p]='Half';
+    });
+  }
+  // If we dropped back to 1, reset remaining to Regular
+  if(item.prot.length === 1){
+    const p = item.prot[0];
+    if(item.protQ[p]==='Half'||item.protQ[p]==='Whole') item.protQ[p]='Regular';
+  }
   reRenderItem(id);
+}
+
+function setProtQ(id,prot,val,btn){
+  const item = O.items.find(it=>it.id===id);
+  item.protQ[prot]=val;
+  btn.closest('.qty-pill').querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
 }
 
 function setItemSingle(id,field,val){
