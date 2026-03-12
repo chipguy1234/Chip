@@ -451,21 +451,18 @@ function toggleItemProt(id,val){
   if(item.prot.includes(val)){
     item.prot = item.prot.filter(p=>p!==val);
     delete item.protQ[val];
+    // If dropped to 1, reset remaining to Regular
+    if(item.prot.length === 1){
+      const p = item.prot[0];
+      item.protQ[p] = 'Regular';
+    }
   } else if(item.prot.length < 2){
     item.prot.push(val);
-    // Default qty based on how many are now selected
-    item.protQ[val] = item.prot.length === 2 ? 'Half' : 'Regular';
-  }
-  // If we now have 2, reset both to Half/Whole defaults
-  if(item.prot.length === 2){
-    item.prot.forEach(p=>{
-      if(item.protQ[p]==='Regular'||item.protQ[p]==='Double') item.protQ[p]='Half';
-    });
-  }
-  // If we dropped back to 1, reset remaining to Regular
-  if(item.prot.length === 1){
-    const p = item.prot[0];
-    if(item.protQ[p]==='Half'||item.protQ[p]==='Whole') item.protQ[p]='Regular';
+    item.protQ[val] = 'Regular'; // set default first
+    // If now 2, reset both to Half
+    if(item.prot.length === 2){
+      item.prot.forEach(p => { item.protQ[p] = 'Half'; });
+    }
   }
   reRenderItem(id);
 }
@@ -603,9 +600,11 @@ function buildSum(){
   let sumHTML = '';
 
   O.items.forEach((item,idx)=>{
-    const protLine = item.prot
-      ? fmtQ(item.prot, item.protQ)
-      : '—';
+    const two = item.prot.length === 2;
+    const protLine = item.prot.length === 0 ? '—'
+      : two
+        ? item.prot.map(p => { const q = item.protQ[p]||'Half'; return `${q} ${p}`; }).join(' & ')
+        : (() => { const q = item.protQ[item.prot[0]]||'Regular'; return q==='Regular' ? item.prot[0] : `${q} ${item.prot[0]}`; })();
     const rD = !item.rice ? '—' : (item.rice==='no rice' ? 'No Rice' : fmtQ(item.rice, item.riceQ));
     const bD = !item.beans ? '—' : (item.beans==='no beans' ? 'No Beans' : fmtQ(item.beans, item.beansQ));
     const tList = item.tops.map(t=>fmtQ(t, item.topQ[t]||'Regular')).join(', ') || 'None';
@@ -628,7 +627,11 @@ function buildSum(){
   lines.push(`Pickup: ${O.pickup}`);
 
   O.items.forEach((item, idx) => {
-    const protLine = item.prot ? fmtQ(item.prot, item.protQ) : '—';
+    const twoP = item.prot.length === 2;
+    const protLine = item.prot.length === 0 ? '—'
+      : twoP
+        ? item.prot.map(p => { const q = item.protQ[p]||'Half'; return `${q} ${p}`; }).join(' & ')
+        : (() => { const q = item.protQ[item.prot[0]]||'Regular'; return q==='Regular' ? item.prot[0] : `${q} ${item.prot[0]}`; })();
     const rD = !item.rice ? 'No Rice' : (item.rice==='no rice' ? 'No Rice' : fmtQ(item.rice, item.riceQ));
     const bD = !item.beans ? 'No Beans' : (item.beans==='no beans' ? 'No Beans' : fmtQ(item.beans, item.beansQ));
 
