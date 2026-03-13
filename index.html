@@ -207,11 +207,12 @@
 const TZ_OFFSET = {EST:0, CST:-1, MST:-2, PST:-3, AKST:-4, HST:-5};
 
 // Batch rounds defined in EST minutes from midnight
-// cutoff = when orders must be submitted; eH/eM = earliest pickup in that batch
+// qH/qM = cutoff (submit by), eH/eM = earliest pickup in that batch window
 const ROUNDS = [
-  {qH:12, qM:0,  eH:12, eM:30},
-  {qH:15, qM:0,  eH:15, eM:30},
-  {qH:18, qM:0,  eH:18, eM:30}
+  {qH:11, qM:0,  eH:11, eM:30},  // Round 1 — submit by 11:00 AM EST, pickup 11:30 AM–2:00 PM
+  {qH:14, qM:0,  eH:14, eM:30},  // Round 2 — submit by 2:00 PM EST,  pickup 2:30 PM–5:00 PM
+  {qH:17, qM:0,  eH:17, eM:30},  // Round 3 — submit by 5:00 PM EST,  pickup 5:30 PM–8:00 PM
+  {qH:20, qM:0,  eH:20, eM:30}   // Round 4 — submit by 8:00 PM EST,  pickup 8:30 PM–11:00 PM
 ];
 
 // Close time: 11 PM EST = 1380 minutes. All time zones extend to their local 11 PM.
@@ -630,7 +631,7 @@ function buildSum(){
     const twoP = item.prot.length === 2;
     const protLine = item.prot.length === 0 ? '—'
       : twoP
-        ? item.prot.map(p => { const q = item.protQ[p]||'Half'; return `${q} ${p}`; }).join(' & ')
+        ? item.prot.map(p => `Half ${p}`).join(' & ')  // always Half & Half in output
         : (() => { const q = item.protQ[item.prot[0]]||'Regular'; return q==='Regular' ? item.prot[0] : `${q} ${item.prot[0]}`; })();
     const rD = !item.rice ? 'No Rice' : (item.rice==='no rice' ? 'No Rice' : fmtQ(item.rice, item.riceQ));
     const bD = !item.beans ? 'No Beans' : (item.beans==='no beans' ? 'No Beans' : fmtQ(item.beans, item.beansQ));
